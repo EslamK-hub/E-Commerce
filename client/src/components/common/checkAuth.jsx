@@ -48,7 +48,7 @@ export default function CheckAuth({ isAuthenticated, user, children }) {
 CheckAuth.propTypes = {
     isAuthenticated: PropTypes.bool.isRequired,
     user: PropTypes.shape({
-        name: PropTypes.string.isRequired,
+        username: PropTypes.string.isRequired,
         role: PropTypes.string.isRequired,
     }),
     children: PropTypes.node.isRequired,

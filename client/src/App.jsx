@@ -22,13 +22,16 @@ import { checkAuth } from "./store/features/authSlice";
 import { Skeleton } from "./components/ui/skeleton";
 
 function App() {
-    const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
+    const { user, isAuthenticated, isLoading } = useSelector(
+    (state) => state.auth
+    );
     const dispatch = useDispatch();
+  
     useEffect(() => {
-        dispatch(checkAuth());
+      dispatch(checkAuth());
     }, [dispatch]);
-
-    if (isLoading) return <Skeleton className="w-[100px] h-[20px] rounded-full" />
+  
+    if (isLoading) return <Skeleton className="w-[800] bg-black h-[600px]" />;
 
     return (
         <div className="flex flex-col overflow-hidden bg-white">

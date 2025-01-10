@@ -4,30 +4,20 @@ import PropTypes from "prop-types";
 export default function CheckAuth({ isAuthenticated, user, children }) {
     const location = useLocation();
 
-    console.log("Current Path:", location.pathname);
-    console.log("User Role:", user?.role);
-
-    // أثناء التحميل أو إذا كانت البيانات غير مكتملة
-    if (!isAuthenticated && !user) {
-        return <div>Loading...</div>; // أو عرض Skeleton
-    }
-
-    // التحقق إذا لم يكن المستخدم مسجلاً دخوله
     if (
         !isAuthenticated &&
         !(
-            location.pathname.startsWith("/auth/login") ||
-            location.pathname.startsWith("/auth/register")
+            location.pathname.includes("/auth/login") ||
+            location.pathname.includes("/auth/register")
         )
     ) {
         return <Navigate to="/auth/login" />;
     }
 
-    // التحقق إذا كان المستخدم مسجلاً ويحاول الوصول إلى صفحات تسجيل الدخول
     if (
         isAuthenticated &&
-        (location.pathname.startsWith("/auth/login") ||
-            location.pathname.startsWith("/auth/register"))
+        (location.pathname.includes("/auth/login") ||
+            location.pathname.includes("/auth/register"))
     ) {
         if (user?.role === "admin") {
             return <Navigate to="/admin/dashboard" />;
@@ -36,25 +26,22 @@ export default function CheckAuth({ isAuthenticated, user, children }) {
         }
     }
 
-    // منع الوصول إلى صفحات الإدارة للمستخدمين غير المسؤولين
     if (
         isAuthenticated &&
         user?.role !== "admin" &&
-        location.pathname.startsWith("/admin")
+        location.pathname.includes("/admin")
     ) {
         return <Navigate to="/unauth-page" />;
     }
 
-    // منع الوصول إلى صفحات التسوق للمسؤولين
     if (
         isAuthenticated &&
         user?.role === "admin" &&
-        location.pathname.startsWith("/shop")
+        location.pathname.includes("/shop")
     ) {
         return <Navigate to="/admin/dashboard" />;
     }
 
-    // السماح بالوصول إذا كانت الشروط مستوفاة
     return <>{children}</>;
 }
 

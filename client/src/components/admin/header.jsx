@@ -1,10 +1,11 @@
 import { AlignJustify, LogOut } from "lucide-react";
 import { Button } from "../ui/button";
+import PropTypes from "prop-types";
 
-export default function AdminHeader() {
+export default function AdminHeader({setOpen}) {
     return (
         <header className="flex items-center justify-between px-4 py-3 bg-background border-b">
-            <Button className="lg:hidden sm:block">
+            <Button className="lg:hidden sm:block" onClick={() => setOpen(true)}>
                 <AlignJustify />
                 <span className="sr-only">Toggle Menu</span>
             </Button>
@@ -16,4 +17,8 @@ export default function AdminHeader() {
             </div>
         </header>
     );
+}
+
+AdminHeader.propTypes = {
+    setOpen: PropTypes.func.isRequired
 }

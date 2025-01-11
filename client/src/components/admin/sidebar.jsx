@@ -73,7 +73,7 @@ const adminSidebarMenuItems = [
 ];
 
 MenuItems.propTypes = {
-    setOpen: PropTypes.func.isRequired,
+    setOpen: PropTypes.func,
 };
 
 function MenuItems({ setOpen }) {
@@ -86,7 +86,7 @@ function MenuItems({ setOpen }) {
                     className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
                     onClick={() => {
                         navigate(menuItem.path);
-                        setOpen ? setOpen(false) : null;
+                        setOpen && setOpen(false);
                     }}
                 >
                     {menuItem.icon}

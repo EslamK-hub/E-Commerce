@@ -1,15 +1,15 @@
 import PropTypes from "prop-types";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { Button } from "../ui/button";
 import {
     Select,
     SelectContent,
     SelectTrigger,
     SelectValue,
+    SelectItem,
 } from "../ui/select";
-import { SelectItem } from "@radix-ui/react-select";
-import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
 
 export default function CommonForm({
     formControls,
@@ -53,20 +53,20 @@ export default function CommonForm({
                     >
                         <SelectTrigger className="w-full">
                             <SelectValue
-                                placeholder={getControlItem.placeholder}
+                                placeholder={getControlItem.label}
                             ></SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                             {getControlItem.options &&
                             getControlItem.options.length > 0
-                                ? getControlItem.options.map((optionItem) => {
+                                ? getControlItem.options.map((optionItem) => (
                                       <SelectItem
                                           key={optionItem.id}
                                           value={optionItem.id}
                                       >
                                           {optionItem.label}
-                                      </SelectItem>;
-                                  })
+                                      </SelectItem>
+                                  ))
                                 : null}
                         </SelectContent>
                     </Select>
@@ -79,6 +79,12 @@ export default function CommonForm({
                         placeholder={getControlItem.placeholder}
                         id={getControlItem.id}
                         value={value}
+                        onChange={(event) =>
+                            setFormData({
+                                ...formData,
+                                [getControlItem.name]: event.target.value,
+                            })
+                        }
                     />
                 );
                 break;

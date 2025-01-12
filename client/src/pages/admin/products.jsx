@@ -27,7 +27,6 @@ export default function AdminProducts() {
     const [formData, setFormData] = useState(initialState);
     const [imageFile, setImageFile] = useState(null);
     const [uploadedImageUrl, setUploadedImageUrl] = useState("");
-
     function onSubmit() {}
     return (
         <Fragment>
@@ -49,7 +48,12 @@ export default function AdminProducts() {
                     <SheetHeader>
                         <SheetTitle>Add New Product</SheetTitle>
                     </SheetHeader>
-                    <ProductImageUpload file={imageFile} setFile={setImageFile} uploadedImageUrl={uploadedImageUrl} setUploadedImageUrl={setUploadedImageUrl}></ProductImageUpload>
+                    <ProductImageUpload
+                        imageFile={imageFile}
+                        setImageFile={setImageFile}
+                        uploadedImageUrl={uploadedImageUrl}
+                        setUploadedImageUrl={setUploadedImageUrl}
+                    ></ProductImageUpload>
                     <div className="py-6">
                         <CommonForm
                             onSubmit={onSubmit}

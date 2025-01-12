@@ -2,14 +2,15 @@ import { useRef } from "react";
 import PropTypes from "prop-types";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { UploadCloudIcon } from "lucide-react";
+import { UploadCloudIcon, XIcon } from "lucide-react";
+import { Button } from "../ui/button";
 
 ProductImageUpload.propTypes = {
-    imageFile: PropTypes.string,
-    setImageFile: PropTypes.func,
+    imageFile: PropTypes.object,
+    setImageFile: PropTypes.func.isRequired,
     uploadedImageUrl: PropTypes.string,
-    setUploadedImageUrl: PropTypes.func,
-}
+    setUploadedImageUrl: PropTypes.func.isRequired,
+};
 
 export default function ProductImageUpload({
     imageFile,
@@ -20,33 +21,77 @@ export default function ProductImageUpload({
     const inputRef = useRef(null);
 
     function handleImageFileChange(e) {
-        console.log(e.target.files);
         const selectedFile = e.target.files?.[0];
-        if (selectedFile) setImageFile(selectedFile);
+        if (selectedFile) {
+            setImageFile(selectedFile);
+            setUploadedImageUrl(URL.createObjectURL(selectedFile)); // Create a preview URL
+        }
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const droppedFile = e.dataTransfer.files?.[0];
+        if (droppedFile) {
+            setImageFile(droppedFile);
+            setUploadedImageUrl(URL.createObjectURL(droppedFile));
+        }
+    }
+
+    function handleRemoveImage() {
+        setImageFile(null);
+        setUploadedImageUrl("");
+        if (inputRef.current) {
+            inputRef.current.value = null;
+        }
     }
     return (
         <div className="w-full max-w-md mx-auto mt-4">
             <Label className="text-lg font-semibold mb-2 block">
                 Upload Image
             </Label>
-            <div className="border-2 border-dashed rounded-lg p-4">
+            <div
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                className="border-2 border-dashed rounded-lg p-4"
+            >
                 <Input
                     id="image-upload"
                     type="file"
+                    accept="image/png, image/jpeg, image/jpg"
                     className="hidden"
                     ref={inputRef}
                     onChange={handleImageFileChange}
                 />
-                {!imageFile ? (
+                {uploadedImageUrl ? (
+                    <div className="relative">
+                        <img
+                            src={uploadedImageUrl}
+                            alt="Uploaded"
+                            className="w-full h-32 object-cover rounded-lg"
+                        />
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
+                            onClick={handleRemoveImage}
+                        >
+                            <XIcon className="w-4 h-4" />
+                        </Button>
+                    </div>
+                ) : (
                     <Label
                         htmlFor="image-upload"
                         className="flex flex-col items-center justify-center h-32 cursor-pointer"
                     >
-                        <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2"></UploadCloudIcon>
+                        <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
                         <span>Drag & Drop or click to upload image</span>
                     </Label>
-                ) : (
-                    <div></div>
                 )}
             </div>
         </div>

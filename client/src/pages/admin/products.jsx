@@ -8,7 +8,13 @@ import {
     SheetTitle,
 } from "@/components/ui/sheet";
 import { addProductFormElements } from "@/config";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    addProduct,
+    getAllProducts,
+} from "@/store/features/admin/productsSlice";
+import { useToast } from "@/hooks/use-toast";
 
 const initialState = {
     image: null,
@@ -27,7 +33,35 @@ export default function AdminProducts() {
     const [formData, setFormData] = useState(initialState);
     const [imageFile, setImageFile] = useState(null);
     const [uploadedImageUrl, setUploadedImageUrl] = useState("");
-    function onSubmit() {}
+    const [imageLoadingState, setImageLoadingState] = useState(false);
+    const { productList } = useSelector((state) => state.adminProducts);
+    const dispatch = useDispatch();
+    const { toast } = useToast();
+
+    function onSubmit(e) {
+        e.preventDefault();
+        dispatch(
+            addProduct({
+                ...formData,
+                image: uploadedImageUrl,
+            })
+        ).then((data) => {
+            if (data?.payload?.success) {
+                dispatch(getAllProducts());
+                setOpenCreateProductDialog(false);
+                setImageFile(null);
+                setFormData(initialState);
+                toast({
+                    title: "Product added successfully",
+                });
+            }
+        });
+    }
+
+    useEffect(() => {
+        dispatch(getAllProducts());
+    }, [dispatch]);
+
     return (
         <Fragment>
             <div className="mb-5 w-full flex justify-end">
@@ -53,6 +87,8 @@ export default function AdminProducts() {
                         setImageFile={setImageFile}
                         uploadedImageUrl={uploadedImageUrl}
                         setUploadedImageUrl={setUploadedImageUrl}
+                        imageLoadingState={imageLoadingState}
+                        setImageLoadingState={setImageLoadingState}
                     ></ProductImageUpload>
                     <div className="py-6">
                         <CommonForm

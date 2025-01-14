@@ -1,15 +1,19 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { UploadCloudIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
+import axios from "axios";
+import { Skeleton } from "../ui/skeleton";
 
 ProductImageUpload.propTypes = {
     imageFile: PropTypes.object,
     setImageFile: PropTypes.func.isRequired,
     uploadedImageUrl: PropTypes.string,
     setUploadedImageUrl: PropTypes.func.isRequired,
+    imageLoadingState: PropTypes.bool,
+    setImageLoadingState: PropTypes.func.isRequired,
 };
 
 export default function ProductImageUpload({
@@ -17,6 +21,8 @@ export default function ProductImageUpload({
     setImageFile,
     uploadedImageUrl,
     setUploadedImageUrl,
+    imageLoadingState,
+    setImageLoadingState,
 }) {
     const inputRef = useRef(null);
 
@@ -50,6 +56,25 @@ export default function ProductImageUpload({
             inputRef.current.value = null;
         }
     }
+
+    async function uploadImageToCloudinary() {
+        setImageLoadingState(true);
+        const data = new FormData();
+        data.append("my_file", imageFile);
+        const response = await axios.post(
+            "http://localhost:5000/api/admin/products/upload-image",
+            data
+        );
+        if (response?.data?.success) {
+            setUploadedImageUrl(response.data.result.url);
+            setImageLoadingState(false);
+        }
+    }
+
+    useEffect(() => {
+        if (imageFile !== null) uploadImageToCloudinary();
+    }, [imageFile]);
+
     return (
         <div className="w-full max-w-md mx-auto mt-4">
             <Label className="text-lg font-semibold mb-2 block">
@@ -69,21 +94,25 @@ export default function ProductImageUpload({
                     onChange={handleImageFileChange}
                 />
                 {uploadedImageUrl ? (
-                    <div className="relative">
-                        <img
-                            src={uploadedImageUrl}
-                            alt="Uploaded"
-                            className="w-full h-32 object-cover rounded-lg"
-                        />
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
-                            onClick={handleRemoveImage}
-                        >
-                            <XIcon className="w-4 h-4" />
-                        </Button>
-                    </div>
+                    imageLoadingState ? (
+                        <Skeleton className="h-10 bg-gray-100"></Skeleton>
+                    ) : (
+                        <div className="relative">
+                            <img
+                                src={uploadedImageUrl}
+                                alt="Uploaded"
+                                className="w-full h-32 object-cover rounded-lg"
+                            />
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
+                                onClick={handleRemoveImage}
+                            >
+                                <XIcon className="w-4 h-4" />
+                            </Button>
+                        </div>
+                    )
                 ) : (
                     <Label
                         htmlFor="image-upload"

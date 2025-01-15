@@ -14,6 +14,7 @@ ProductImageUpload.propTypes = {
     setUploadedImageUrl: PropTypes.func.isRequired,
     imageLoadingState: PropTypes.bool,
     setImageLoadingState: PropTypes.func.isRequired,
+    setFormData: PropTypes.func.isRequired,
 };
 
 export default function ProductImageUpload({
@@ -23,6 +24,7 @@ export default function ProductImageUpload({
     setUploadedImageUrl,
     imageLoadingState,
     setImageLoadingState,
+    setFormData,
 }) {
     const inputRef = useRef(null);
 
@@ -30,7 +32,7 @@ export default function ProductImageUpload({
         const selectedFile = e.target.files?.[0];
         if (selectedFile) {
             setImageFile(selectedFile);
-            setUploadedImageUrl(URL.createObjectURL(selectedFile)); // Create a preview URL
+            setUploadedImageUrl(URL.createObjectURL(selectedFile));
         }
     }
 
@@ -52,6 +54,10 @@ export default function ProductImageUpload({
     function handleRemoveImage() {
         setImageFile(null);
         setUploadedImageUrl("");
+        setFormData((prevData) => ({
+            ...prevData,
+            image: null,
+        }));
         if (inputRef.current) {
             inputRef.current.value = null;
         }

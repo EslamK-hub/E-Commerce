@@ -11,12 +11,30 @@ import {
     SelectItem,
 } from "../ui/select";
 
+CommonForm.propTypes = {
+    formControls: PropTypes.arrayOf(
+        PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            label: PropTypes.string.isRequired,
+            placeholder: PropTypes.string,
+            componentType: PropTypes.string.isRequired,
+            type: PropTypes.string,
+        })
+    ).isRequired,
+    formData: PropTypes.object.isRequired,
+    setFormData: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func,
+    buttonText: PropTypes.string,
+    isBtnDisabled: PropTypes.bool,
+};
+
 export default function CommonForm({
     formControls,
     formData,
     setFormData,
     onSubmit,
     buttonText,
+    isBtnDisabled,
 }) {
     function renderInputsByComponentType(getControlItem) {
         let element = null;
@@ -111,25 +129,9 @@ export default function CommonForm({
                     </div>
                 ))}
             </div>
-            <Button type="submit" className="mt-2 w-full">
+            <Button disabled={isBtnDisabled} type="submit" className="mt-2 w-full">
                 {buttonText || "Submit"}
             </Button>
         </form>
     );
 }
-
-CommonForm.propTypes = {
-    formControls: PropTypes.arrayOf(
-        PropTypes.shape({
-            name: PropTypes.string.isRequired,
-            label: PropTypes.string.isRequired,
-            placeholder: PropTypes.string,
-            componentType: PropTypes.string.isRequired,
-            type: PropTypes.string,
-        })
-    ).isRequired,
-    formData: PropTypes.object.isRequired,
-    setFormData: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func,
-    buttonText: PropTypes.string,
-};

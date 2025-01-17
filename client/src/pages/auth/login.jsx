@@ -49,7 +49,7 @@ export default function AuthLogin() {
             </div>
             <CommonForm
                 formControls={loginFormControls}
-                buttonText="Sign Up"
+                buttonText="Sign In"
                 formData={formData}
                 setFormData={setFormData}
                 onSubmit={onSubmit}

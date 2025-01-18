@@ -50,7 +50,7 @@ function App() {
                     <Route path="home" element={<ShoppingHome />} />
                     <Route path="checkout" element={<ShoppingCheckout />} />
                     <Route path="account" element={<ShoppingAccount />} />
-                    <Route path="account" element={<ShoppingListing />} />
+                    <Route path="listing" element={<ShoppingListing />} />
                 </Route>
                 <Route path="*" element={<NotFound />}></Route>
                 <Route path="/unauth-page" element={<UnAuthPage/>}></Route>

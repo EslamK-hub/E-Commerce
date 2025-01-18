@@ -5,7 +5,7 @@ export default function ShoppingLayout() {
     return (
         <div className="flex flex-col bg-white overflow-hidden">
             <ShoppingHeader></ShoppingHeader>
-            <main className="flex flex-1 w-full">
+            <main className="flex flex-col w-full">
                 <Outlet></Outlet>
             </main>
         </div>

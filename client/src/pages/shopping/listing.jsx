@@ -1,4 +1,5 @@
 import ProductFilter from "@/components/shopping/filter";
+import ShoppingProductTile from "@/components/shopping/product-tile";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -8,15 +9,28 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { sortOptions } from "@/config";
+import { getAllFilteredProducts } from "@/store/features/shop/productsSlice";
 import { ArrowUpDownIcon } from "lucide-react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function ShoppingListing() {
+    const dispatch = useDispatch();
+    const { productList } = useSelector((state) => state.shopProducts);
+
+    console.log(productList)
+    useEffect(() => {
+        dispatch(getAllFilteredProducts());
+    }, [dispatch]);
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
             <ProductFilter></ProductFilter>
             <div className="bg-background w-full rounded-lg shadow-sm">
                 <div className="p-4 border-b flex items-center justify-between">
-                    <h2 className="text-lg font-extrabold mr-2">All Products</h2>
+                    <h2 className="text-lg font-extrabold mr-2">
+                        All Products
+                    </h2>
                     <div className="flex items-center gap-3">
                         <span className="text-muted-foreground">
                             10 Products
@@ -32,15 +46,32 @@ export default function ShoppingListing() {
                                     <span>Sort by</span>
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-[200px]">
+                            <DropdownMenuContent
+                                align="end"
+                                className="w-[200px]"
+                            >
                                 <DropdownMenuRadioGroup>
-                                    {sortOptions.map(sortItem => <DropdownMenuRadioItem key={sortItem.id}>{ sortItem.label }</DropdownMenuRadioItem>)}
+                                    {sortOptions.map((sortItem) => (
+                                        <DropdownMenuRadioItem
+                                            key={sortItem.id}
+                                        >
+                                            {sortItem.label}
+                                        </DropdownMenuRadioItem>
+                                    ))}
                                 </DropdownMenuRadioGroup>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4"></div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
+                    {productList && productList.length > 0
+                        ? productList.map((product) => (
+                              <ShoppingProductTile key={product._id}
+                                  product={product}
+                              ></ShoppingProductTile>
+                          ))
+                        : null}
+                </div>
             </div>
         </div>
     );

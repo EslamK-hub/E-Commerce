@@ -1,6 +1,18 @@
+import PropTypes from "prop-types";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
+
+ShoppingProductTile.propTypes = {
+    product: PropTypes.shape({
+        image: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        category: PropTypes.string,
+        brand: PropTypes.string,
+        price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        salePrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    }).isRequired,
+};
 
 export default function ShoppingProductTile({ product }) {
     return (
@@ -34,11 +46,11 @@ export default function ShoppingProductTile({ product }) {
                                 product?.salePrice > 0 ? "line-through" : ""
                             } text-lg font-semibold text-primary`}
                         >
-                            {product?.price}
+                            ${product?.price}
                         </span>
                         {product?.salePrice > 0 ? (
                             <span className="text-lg font-semibold text-primary">
-                                {product?.salePrice}
+                                ${product?.salePrice}
                             </span>
                         ) : null}
                     </div>

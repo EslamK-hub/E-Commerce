@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
+import { filterOptions } from "@/config";
 
 ShoppingProductTile.propTypes = {
     product: PropTypes.shape({
@@ -9,12 +10,21 @@ ShoppingProductTile.propTypes = {
         title: PropTypes.string.isRequired,
         category: PropTypes.string,
         brand: PropTypes.string,
-        price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        price: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+            .isRequired,
         salePrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }).isRequired,
 };
 
 export default function ShoppingProductTile({ product }) {
+    const categoryLabel =
+        filterOptions.category.find((c) => c.id === product?.category)?.label ||
+        product?.category;
+
+    const brandLabel =
+        filterOptions.brand.find((b) => b.id === product?.brand)?.label ||
+        product?.brand;
+
     return (
         <Card className="w-full max-w-sm max-auto">
             <div>
@@ -33,11 +43,11 @@ export default function ShoppingProductTile({ product }) {
                 <CardContent className="p-4">
                     <h2 className="text-xl font-bold mb-2">{product?.title}</h2>
                     <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm text-muted-foreground">
-                            {product?.category}
+                        <span className="text-[16px] text-muted-foreground">
+                            {categoryLabel}
                         </span>
-                        <span className="text-sm text-muted-foreground">
-                            {product?.brand}
+                        <span className="text-[16px] text-muted-foreground">
+                            {brandLabel}
                         </span>
                     </div>
                     <div className="flex justify-between items-center mb-2">

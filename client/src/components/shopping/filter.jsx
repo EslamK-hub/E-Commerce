@@ -1,10 +1,16 @@
+import PropTypes from "prop-types";
 import { filterOptions } from "@/config";
 import { Fragment } from "react";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { Separator } from "../ui/separator";
 
-export default function ProductFilter() {
+ProductFilter.propTypes = {
+    filters: PropTypes.object.isRequired,
+    handleFilter: PropTypes.func.isRequired,
+};
+
+export default function ProductFilter({filters, handleFilter}) {
     return (
         <div className="bg-background rounded-lg shadow-sm">
             <div className="p-4 border-b">
@@ -18,7 +24,7 @@ export default function ProductFilter() {
                             <div className="grid gap-2 mt-2">
                                 {filterOptions[keyItem].map((option) => (
                                     <Label key={option.id} className="flex font-medium items-center gap-2">
-                                        <Checkbox></Checkbox>
+                                        <Checkbox checked={filters && Object.keys(filters).length > 0 && filters[keyItem] && filters[keyItem].indexOf(option.id) > -1} onCheckedChange={() => handleFilter(keyItem, option.id)}></Checkbox>
                                         {option.label}
                                     </Label>
                                 ))}

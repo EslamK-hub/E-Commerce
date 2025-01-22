@@ -6,6 +6,7 @@ import { filterOptions } from "@/config";
 
 ShoppingProductTile.propTypes = {
     product: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
         image: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
         category: PropTypes.string,
@@ -14,9 +15,13 @@ ShoppingProductTile.propTypes = {
             .isRequired,
         salePrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }).isRequired,
+    handleGetProductDetails: PropTypes.func.isRequired,
 };
 
-export default function ShoppingProductTile({ product }) {
+export default function ShoppingProductTile({
+    product,
+    handleGetProductDetails,
+}) {
     const categoryLabel =
         filterOptions.category.find((c) => c.id === product?.category)?.label ||
         product?.category;
@@ -27,7 +32,7 @@ export default function ShoppingProductTile({ product }) {
 
     return (
         <Card className="w-full max-w-sm max-auto">
-            <div>
+            <div onClick={() => handleGetProductDetails(product?._id)}>
                 <div className="relative">
                     <img
                         src={product?.image}

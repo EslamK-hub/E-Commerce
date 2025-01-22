@@ -1,5 +1,6 @@
 import ProductFilter from "@/components/shopping/filter";
 import ShoppingProductTile from "@/components/shopping/product-tile";
+import ProductDetailsDialog from "@/components/shopping/product-details";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -9,7 +10,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { sortOptions } from "@/config";
-import { getAllFilteredProducts } from "@/store/features/shop/productsSlice";
+import { getAllFilteredProducts, getProductDetails } from "@/store/features/shop/productsSlice";
 import { ArrowUpDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,10 +29,11 @@ function createSearchParamsHelper(filterParams) {
 
 export default function ShoppingListing() {
     const dispatch = useDispatch();
-    const { productList } = useSelector((state) => state.shopProducts);
+    const { productList, productDetails } = useSelector((state) => state.shopProducts);
     const [filters, setFilters] = useState({});
     const [sort, setSort] = useState(null);
     const [searchParams, setSearchParams] = useSearchParams();
+    const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
     useEffect(() => {
         if (filters !== null && sort !== null)
@@ -80,6 +82,13 @@ export default function ShoppingListing() {
         }
     }, [filters]);
 
+    function handleGetProductDetails(getCurrentProductId) {
+        dispatch(getProductDetails(getCurrentProductId))
+    }
+    
+    useEffect(() => {
+        if(productDetails !== null) setOpenDetailsDialog(true)
+    }, [productDetails])
     return (
         <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
             <ProductFilter
@@ -132,12 +141,14 @@ export default function ShoppingListing() {
                         ? productList.map((product) => (
                               <ShoppingProductTile
                                   key={product._id}
-                                  product={product}
+                                product={product}
+                                handleGetProductDetails={handleGetProductDetails}
                               ></ShoppingProductTile>
                           ))
                         : null}
                 </div>
             </div>
+            <ProductDetailsDialog open={openDetailsDialog} setOpen={setOpenDetailsDialog} productDetails={productDetails}></ProductDetailsDialog>
         </div>
     );
 }

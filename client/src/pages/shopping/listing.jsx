@@ -15,6 +15,8 @@ import { ArrowUpDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
+import { addCart, getCartItems } from "@/store/features/shop/cartSlice";
+import { useToast } from "@/hooks/use-toast";
 
 function createSearchParamsHelper(filterParams) {
     const queryParams = [];
@@ -30,10 +32,12 @@ function createSearchParamsHelper(filterParams) {
 export default function ShoppingListing() {
     const dispatch = useDispatch();
     const { productList, productDetails } = useSelector((state) => state.shopProducts);
+    const { user } = useSelector((state) => state.auth);
     const [filters, setFilters] = useState({});
     const [sort, setSort] = useState(null);
     const [searchParams, setSearchParams] = useSearchParams();
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+    const { toast } = useToast();
 
     useEffect(() => {
         if (filters !== null && sort !== null)
@@ -89,6 +93,18 @@ export default function ShoppingListing() {
     useEffect(() => {
         if(productDetails !== null) setOpenDetailsDialog(true)
     }, [productDetails])
+    
+    function handleAddToCart(getCurrentProductId) {
+        dispatch(addCart({ userId: user?.id, productId: getCurrentProductId, quantity: 1 })).then(data => {
+            if (data?.payload?.success) {
+                dispatch(getCartItems(user?.id))
+                toast({
+                    title: "Product is added to cart",
+                })
+            }
+        })
+    }
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
             <ProductFilter
@@ -143,6 +159,7 @@ export default function ShoppingListing() {
                                   key={product._id}
                                 product={product}
                                 handleGetProductDetails={handleGetProductDetails}
+                                handleAddToCart={handleAddToCart}
                               ></ShoppingProductTile>
                           ))
                         : null}

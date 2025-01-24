@@ -16,11 +16,13 @@ ShoppingProductTile.propTypes = {
         salePrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }).isRequired,
     handleGetProductDetails: PropTypes.func.isRequired,
+    handleAddToCart: PropTypes.func.isRequired,
 };
 
 export default function ShoppingProductTile({
     product,
     handleGetProductDetails,
+    handleAddToCart,
 }) {
     const categoryLabel =
         filterOptions.category.find((c) => c.id === product?.category)?.label ||
@@ -32,7 +34,7 @@ export default function ShoppingProductTile({
 
     return (
         <Card className="w-full max-w-sm max-auto">
-            <div onClick={() => handleGetProductDetails(product?._id)}>
+            <div className="cursor-pointer" onClick={() => handleGetProductDetails(product?._id)}>
                 <div className="relative">
                     <img
                         src={product?.image}
@@ -70,10 +72,15 @@ export default function ShoppingProductTile({
                         ) : null}
                     </div>
                 </CardContent>
-                <CardFooter>
-                    <Button className="w-full">Add to cart</Button>
-                </CardFooter>
             </div>
+            <CardFooter>
+                <Button
+                    onClick={() => handleAddToCart(product?._id)}
+                    className="w-full"
+                >
+                    Add to cart
+                </Button>
+            </CardFooter>
         </Card>
     );
 }

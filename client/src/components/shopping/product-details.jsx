@@ -13,6 +13,7 @@ import { Input } from "../ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
 import { addCart, getCartItems } from "@/store/features/shop/cartSlice";
+import { setProductDetails } from "@/store/features/shop/productsSlice";
 
 ProdDetailsDialog.propTypes = {
     productDetails: PropTypes.shape({
@@ -50,8 +51,13 @@ export default function ProdDetailsDialog({ open, setOpen, productDetails }) {
             }
         });
     }
+
+    function handleDialogClose() {
+        setOpen(false);
+        dispatch(setProductDetails());
+    }
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={handleDialogClose}>
             <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
                 <div className="relative overflow-hidden rounded-lg">
                     <img

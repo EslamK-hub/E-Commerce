@@ -62,6 +62,7 @@ function MenuItems() {
             getCurrentMenuItem.id !== "home" &&
             getCurrentMenuItem.id !== "products"
                 ? { category: [getCurrentMenuItem.id] }
+                ? { category: [getCurrentMenuItem.id] }
                 : null;
         sessionStorage.setItem("filters", JSON.stringify(currentFilter));
         navigate(getCurrentMenuItem.path);

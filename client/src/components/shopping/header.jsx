@@ -1,6 +1,6 @@
 import { House, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { shoppingViewHeaderMenuItems } from "@/config";
@@ -38,7 +38,20 @@ export default function ShoppingHeader() {
                             <span className="sr-only">Toggle header menu</span>
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-full max-w-xs">
+                    <SheetContent
+                        side="left"
+                        className="w-full max-w-xs"
+                        aria-describedby={undefined}
+                    >
+                        <SheetTitle>
+                            <Link
+                                to="/shop/home"
+                                className="flex items-center gap-2"
+                            >
+                                <House className="h-6 w-6" />
+                                <span className="font-bold">Sahilli</span>
+                            </Link>
+                        </SheetTitle>
                         <MenuItems></MenuItems>
                         <HeaderRightContent></HeaderRightContent>
                     </SheetContent>
@@ -62,13 +75,12 @@ function MenuItems() {
             getCurrentMenuItem.id !== "home" &&
             getCurrentMenuItem.id !== "products"
                 ? { category: [getCurrentMenuItem.id] }
-                ? { category: [getCurrentMenuItem.id] }
                 : null;
         sessionStorage.setItem("filters", JSON.stringify(currentFilter));
         navigate(getCurrentMenuItem.path);
     }
     return (
-        <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
+        <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row mt-8">
             {shoppingViewHeaderMenuItems.map((menuItem) => (
                 <Label
                     onClick={() => handleNavigate(menuItem)}

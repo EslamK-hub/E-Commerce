@@ -29,7 +29,7 @@ export default function AddressCard({
                 <Label>Phone : {addressInfo?.phone}</Label>
                 <Label>Notes : {addressInfo?.notes}</Label>
             </CardContent>
-            <CardFooter className="flex justify-between p-3 gap-1">
+            <CardFooter className="grid grid-cols-0 md:grid-cols-2 p-3 gap-1">
                 <Button
                     className="w-full"
                     onClick={() => handleUpdateAddress(addressInfo)}

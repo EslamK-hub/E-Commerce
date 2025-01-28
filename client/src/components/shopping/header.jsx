@@ -80,7 +80,7 @@ function MenuItems() {
         navigate(getCurrentMenuItem.path);
     }
     return (
-        <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row mt-8">
+        <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row mt-8 lg:mt-0">
             {shoppingViewHeaderMenuItems.map((menuItem) => (
                 <Label
                     onClick={() => handleNavigate(menuItem)}
@@ -123,6 +123,7 @@ function HeaderRightContent() {
                     <span className="sr-only">User cart</span>
                 </Button>
                 <UserCartWrapper
+                    setOpenCartSheet={setOpenCartSheet}
                     cartItems={
                         cartItems &&
                         cartItems.items &&

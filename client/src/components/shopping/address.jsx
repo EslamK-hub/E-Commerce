@@ -11,6 +11,11 @@ import {
 } from "@/store/features/shop/addressSlice";
 import { useToast } from "@/hooks/use-toast";
 import AddressCard from "./address-card";
+import PropTypes from "prop-types";
+
+Address.propTypes = {
+    setCurrentSelectedAddress: PropTypes.func,
+};
 
 const initialAddressFormData = {
     address: "",
@@ -20,7 +25,7 @@ const initialAddressFormData = {
     notes: "",
 };
 
-export default function Address() {
+export default function Address({ setCurrentSelectedAddress }) {
     const [formData, setFormData] = useState(initialAddressFormData);
     const [currentUpdatedId, setCurrentUpdatedId] = useState(null);
     const dispatch = useDispatch();
@@ -116,6 +121,9 @@ export default function Address() {
                               handleDeleteAddress={handleDeleteAddress}
                               handleUpdateAddress={handleUpdateAddress}
                               setFormData={setFormData}
+                              setCurrentSelectedAddress={
+                                  setCurrentSelectedAddress
+                              }
                           ></AddressCard>
                       ))
                     : null}

@@ -13,15 +13,23 @@ AddressCard.propTypes = {
     }),
     handleDeleteAddress: PropTypes.func,
     handleUpdateAddress: PropTypes.func,
+    setCurrentSelectedAddress: PropTypes.func,
 };
 
 export default function AddressCard({
     addressInfo,
     handleDeleteAddress,
     handleUpdateAddress,
+    setCurrentSelectedAddress,
 }) {
     return (
-        <Card>
+        <Card
+            onClick={
+                setCurrentSelectedAddress
+                    ? () => setCurrentSelectedAddress(addressInfo)
+                    : null
+            }
+        >
             <CardContent className="grid p-4 gap-4">
                 <Label>Address : {addressInfo?.address}</Label>
                 <Label>City : {addressInfo?.city}</Label>

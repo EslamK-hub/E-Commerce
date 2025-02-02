@@ -1,11 +1,23 @@
-import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
-import { Badge } from "../ui/badge";
+import { useState } from "react";
+import CommonForm from "../common/form";
 import { DialogContent, DialogTitle } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
+import PropTypes from "prop-types";
+import { Badge } from "../ui/badge";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    getAllOrdersAllUsers,
+    getOrderDetailsForAdmin,
+    updateOrderStatus,
+} from "@/store/features/admin/orderSlice";
+import { useToast } from "@/hooks/use-toast";
 
-ShoppingOrderDetailsView.propTypes = {
+const initialFormData = {
+    status: "",
+};
+
+AdminOrderDetailsView.propTypes = {
     orderDetails: PropTypes.shape({
         _id: PropTypes.string,
         orderDate: PropTypes.string,
@@ -18,7 +30,7 @@ ShoppingOrderDetailsView.propTypes = {
                 productId: PropTypes.string.isRequired,
                 title: PropTypes.string.isRequired,
                 quantity: PropTypes.number.isRequired,
-                price: PropTypes.number.isRequired,
+                price: PropTypes.string.isRequired,
             })
         ),
         addressInfo: PropTypes.shape({
@@ -31,8 +43,29 @@ ShoppingOrderDetailsView.propTypes = {
     }),
 };
 
-export default function ShoppingOrderDetailsView({ orderDetails }) {
+export default function AdminOrderDetailsView({ orderDetails }) {
+    const [formData, setFormData] = useState(initialFormData);
     const { user } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
+    const { toast } = useToast();
+
+    function handleUpdateStatus(e) {
+        e.preventDefault();
+        const { status } = formData;
+        dispatch(
+            updateOrderStatus({
+                id: orderDetails?._id,
+                orderStatus: status,
+            })
+        ).then((data) => {
+            if (data?.payload?.success) {
+                dispatch(getOrderDetailsForAdmin(orderDetails?._id));
+                dispatch(getAllOrdersAllUsers());
+                setFormData(initialFormData);
+                toast({ title: data?.payload?.message });
+            }
+        });
+    }
     return (
         <DialogContent
             className="sm:max-w-[600px]"
@@ -113,6 +146,29 @@ export default function ShoppingOrderDetailsView({ orderDetails }) {
                             <span>{orderDetails?.addressInfo?.notes}</span>
                         </div>
                     </div>
+                </div>
+
+                <div>
+                    <CommonForm
+                        formControls={[
+                            {
+                                label: "Order Status",
+                                name: "status",
+                                componentType: "select",
+                                options: [
+                                    { id: "pending", label: "Pending" },
+                                    { id: "inProcess", label: "In Process" },
+                                    { id: "inShipping", label: "In Shipping" },
+                                    { id: "delivered", label: "Delivered" },
+                                    { id: "rejected", label: "Rejected" },
+                                ],
+                            },
+                        ]}
+                        formData={formData}
+                        setFormData={setFormData}
+                        buttonText={"Update Order Status"}
+                        onSubmit={handleUpdateStatus}
+                    ></CommonForm>
                 </div>
             </div>
         </DialogContent>

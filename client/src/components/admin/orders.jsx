@@ -10,32 +10,35 @@ import {
     TableHeader,
     TableRow,
 } from "../ui/table";
-import ShoppingOrderDetailsView from "./order-details";
+import AdminOrderDetailsView from "./order-details";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    getAllOrdersByUserId,
-    getOrderDetails,
+    getAllOrdersAllUsers,
+    getOrderDetailsForAdmin,
     resetOrderDetails,
-} from "@/store/features/shop/orderSlice";
+} from "@/store/features/admin/orderSlice";
 import { Badge } from "../ui/badge";
 
-export default function ShoppingOrders() {
+export default function AdminOrdersView() {
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+    const { orderList, orderDetails } = useSelector(
+        (state) => state.adminOrders
+    );
     const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.auth);
-    const { orderList, orderDetails } = useSelector((state) => state.shopOrder);
 
     function handleFetchOrderDetails(getId) {
-        dispatch(getOrderDetails(getId));
+        dispatch(getOrderDetailsForAdmin(getId));
     }
 
     useEffect(() => {
-        dispatch(getAllOrdersByUserId(user?.id));
+        dispatch(getAllOrdersAllUsers());
     }, [dispatch]);
 
     useEffect(() => {
         if (orderDetails !== null) setOpenDetailsDialog(true);
     }, [orderDetails]);
+
+    console.log(orderDetails);
     return (
         <Card>
             <CardHeader>
@@ -97,9 +100,9 @@ export default function ShoppingOrders() {
                                               >
                                                   View Details
                                               </Button>
-                                              <ShoppingOrderDetailsView
+                                              <AdminOrderDetailsView
                                                   orderDetails={orderDetails}
-                                              ></ShoppingOrderDetailsView>
+                                              ></AdminOrderDetailsView>
                                           </Dialog>
                                       </TableCell>
                                   </TableRow>

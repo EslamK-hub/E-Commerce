@@ -26,6 +26,7 @@ ProdDetailsDialog.propTypes = {
         price: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
             .isRequired,
         salePrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        totalStock: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
     open: PropTypes.bool,
     setOpen: PropTypes.func,
@@ -34,8 +35,26 @@ ProdDetailsDialog.propTypes = {
 export default function ProdDetailsDialog({ open, setOpen, productDetails }) {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
+    const { cartItems } = useSelector((state) => state.shopCart);
     const { toast } = useToast();
-    function handleAddToCart(getCurrentProductId) {
+    function handleAddToCart(getCurrentProductId, getTotalStock) {
+        let geCartItems = cartItems.items || [];
+
+        if (geCartItems.length) {
+            const indexOfCurrentItem = geCartItems.findIndex(
+                (item) => item.productId === getCurrentProductId
+            );
+            if (indexOfCurrentItem > -1) {
+                const getQuantity = geCartItems[indexOfCurrentItem].quantity;
+                if (getQuantity + 1 > getTotalStock) {
+                    toast({
+                        title: `Only ${getQuantity} quantity can be added for this item`,
+                        variant: "destructive",
+                    });
+                    return;
+                }
+            }
+        }
         dispatch(
             addCart({
                 userId: user?.id,
@@ -105,12 +124,26 @@ export default function ProdDetailsDialog({ open, setOpen, productDetails }) {
                         <span className="text-muted-foreground">(4.5)</span>
                     </div>
                     <div className="mt-5 mb-5">
-                        <Button
-                            className="w-full"
-                            onClick={() => handleAddToCart(productDetails?._id)}
-                        >
-                            Add To Cart
-                        </Button>
+                        {productDetails?.totalStock === 0 ? (
+                            <Button
+                                className="w-full opacity-60 select-none"
+                                disabled
+                            >
+                                Out of Stock
+                            </Button>
+                        ) : (
+                            <Button
+                                className="w-full"
+                                onClick={() =>
+                                    handleAddToCart(
+                                        productDetails?._id,
+                                        productDetails?.totalStock
+                                    )
+                                }
+                            >
+                                Add To Cart
+                            </Button>
+                        )}
                     </div>
                     <Separator></Separator>
                     <div className="max-h-[300px] overflow-auto">

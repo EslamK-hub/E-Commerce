@@ -10,7 +10,10 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { sortOptions } from "@/config";
-import { getAllFilteredProducts, getProductDetails } from "@/store/features/shop/productsSlice";
+import {
+    getAllFilteredProducts,
+    getProductDetails,
+} from "@/store/features/shop/productsSlice";
 import { ArrowUpDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,13 +34,18 @@ function createSearchParamsHelper(filterParams) {
 
 export default function ShoppingListing() {
     const dispatch = useDispatch();
-    const { productList, productDetails } = useSelector((state) => state.shopProducts);
+    const { productList, productDetails } = useSelector(
+        (state) => state.shopProducts
+    );
+    const { cartItems } = useSelector((state) => state.shopCart);
     const { user } = useSelector((state) => state.auth);
     const [filters, setFilters] = useState({});
     const [sort, setSort] = useState(null);
     const [searchParams, setSearchParams] = useSearchParams();
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
     const { toast } = useToast();
+
+    const categorySearchParams = searchParams.get("category");
 
     useEffect(() => {
         if (filters !== null && sort !== null)
@@ -77,7 +85,7 @@ export default function ShoppingListing() {
     useEffect(() => {
         setSort("price-lowtohigh");
         setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
-    }, []);
+    }, [categorySearchParams]);
 
     useEffect(() => {
         if (filters && Object.keys(filters).length > 0) {
@@ -87,22 +95,46 @@ export default function ShoppingListing() {
     }, [filters]);
 
     function handleGetProductDetails(getCurrentProductId) {
-        dispatch(getProductDetails(getCurrentProductId))
+        dispatch(getProductDetails(getCurrentProductId));
     }
-    
+
     useEffect(() => {
-        if(productDetails !== null) setOpenDetailsDialog(true)
-    }, [productDetails])
-    
-    function handleAddToCart(getCurrentProductId) {
-        dispatch(addCart({ userId: user?.id, productId: getCurrentProductId, quantity: 1 })).then(data => {
+        if (productDetails !== null) setOpenDetailsDialog(true);
+    }, [productDetails]);
+
+    function handleAddToCart(getCurrentProductId, getTotalStock) {
+        let geCartItems = cartItems.items || [];
+
+        if (geCartItems.length) {
+            const indexOfCurrentItem = geCartItems.findIndex(
+                (item) => item.productId === getCurrentProductId
+            );
+            if (indexOfCurrentItem > -1) {
+                const getQuantity = geCartItems[indexOfCurrentItem].quantity;
+                if (getQuantity + 1 > getTotalStock) {
+                    toast({
+                        title: `Only ${getQuantity} quantity can be added for this item`,
+                        variant: "destructive",
+                    });
+
+                    return;
+                }
+            }
+        }
+        dispatch(
+            addCart({
+                userId: user?.id,
+                productId: getCurrentProductId,
+                quantity: 1,
+            })
+        ).then((data) => {
             if (data?.payload?.success) {
-                dispatch(getCartItems(user?.id))
+                dispatch(getCartItems(user?.id));
                 toast({
                     title: "Product is added to cart",
-                })
+                });
             }
-        })
+        });
     }
 
     return (
@@ -157,15 +189,21 @@ export default function ShoppingListing() {
                         ? productList.map((product) => (
                               <ShoppingProductTile
                                   key={product._id}
-                                product={product}
-                                handleGetProductDetails={handleGetProductDetails}
-                                handleAddToCart={handleAddToCart}
+                                  product={product}
+                                  handleGetProductDetails={
+                                      handleGetProductDetails
+                                  }
+                                  handleAddToCart={handleAddToCart}
                               ></ShoppingProductTile>
                           ))
                         : null}
                 </div>
             </div>
-            <ProductDetailsDialog open={openDetailsDialog} setOpen={setOpenDetailsDialog} productDetails={productDetails}></ProductDetailsDialog>
+            <ProductDetailsDialog
+                open={openDetailsDialog}
+                setOpen={setOpenDetailsDialog}
+                productDetails={productDetails}
+            ></ProductDetailsDialog>
         </div>
     );
 }

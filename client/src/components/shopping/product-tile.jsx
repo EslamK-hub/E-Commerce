@@ -14,6 +14,7 @@ ShoppingProductTile.propTypes = {
         price: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
             .isRequired,
         salePrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        totalStock: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }).isRequired,
     handleGetProductDetails: PropTypes.func.isRequired,
     handleAddToCart: PropTypes.func.isRequired,
@@ -34,14 +35,25 @@ export default function ShoppingProductTile({
 
     return (
         <Card className="w-full max-w-sm max-auto">
-            <div className="cursor-pointer" onClick={() => handleGetProductDetails(product?._id)}>
+            <div
+                className="cursor-pointer"
+                onClick={() => handleGetProductDetails(product?._id)}
+            >
                 <div className="relative">
                     <img
                         src={product?.image}
                         alt={product?.title}
                         className="w-full h-[300px] object-cover rounded-t-lg"
                     />
-                    {product?.salePrice > 0 ? (
+                    {product?.totalStock === 0 ? (
+                        <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+                            Out of Stock
+                        </Badge>
+                    ) : product?.totalStock < 10 ? (
+                        <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+                            {`Only ${product?.totalStock} items left`}
+                        </Badge>
+                    ) : product?.salePrice > 0 ? (
                         <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
                             Sale
                         </Badge>
@@ -74,12 +86,18 @@ export default function ShoppingProductTile({
                 </CardContent>
             </div>
             <CardFooter>
-                <Button
-                    onClick={() => handleAddToCart(product?._id)}
-                    className="w-full"
-                >
-                    Add to cart
-                </Button>
+                {product?.totalStock === 0 ? (
+                    <Button className="w-full opacity-60 select-none" disabled>
+                        Out of Stock
+                    </Button>
+                ) : (
+                    <Button
+                        onClick={() => handleAddToCart(product?._id, product?.totalStock)}
+                        className="w-full"
+                    >
+                        Add to cart
+                    </Button>
+                )}
             </CardFooter>
         </Card>
     );

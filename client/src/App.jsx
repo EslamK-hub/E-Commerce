@@ -23,6 +23,7 @@ import { Skeleton } from "./components/ui/skeleton";
 import PaypalReturnPage from "./pages/shopping/paypal-return";
 import PaypalCancelPage from "./pages/shopping/paypal-cancel";
 import PaymentSuccessPage from "./pages/shopping/payment-success";
+import SearchProducts from "./pages/shopping/search";
 
 function App() {
     const { user, isAuthenticated, isLoading } = useSelector(
@@ -57,6 +58,7 @@ function App() {
                     <Route path="paypal-return" element={<PaypalReturnPage />} />
                     <Route path="paypal-cancel" element={<PaypalCancelPage />} />
                     <Route path="payment-success" element={<PaymentSuccessPage />} />
+                    <Route path="search" element={<SearchProducts />} />
                 </Route>
                 <Route path="*" element={<NotFound />}></Route>
                 <Route path="/unauth-page" element={<UnAuthPage/>}></Route>

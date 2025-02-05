@@ -33,16 +33,16 @@ export default function ShoppingCheckout() {
         if (cartItems.length === 0) {
             toast({
                 title: "Your cart is empty. Please add items to proceed.",
-                variant: "destructive"
-            })
+                variant: "destructive",
+            });
             return;
         }
 
         if (currentSelectedAddress === null) {
             toast({
                 title: "Please select one address to proceed.",
-                variant: "destructive"
-            })
+                variant: "destructive",
+            });
             return;
         }
 
@@ -101,6 +101,7 @@ export default function ShoppingCheckout() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5 p-5">
                 <Address
                     setCurrentSelectedAddress={setCurrentSelectedAddress}
+                    selectedId={currentSelectedAddress}
                 ></Address>
                 <div className="flex flex-col gap-4">
                     {cartItems && cartItems.items && cartItems.items.length > 0
@@ -124,7 +125,9 @@ export default function ShoppingCheckout() {
                             onClick={handleInitiatePaypalPayment}
                             className="w-full"
                         >
-                            Checkout with Paypal
+                            {isPaymentStart
+                                ? "Processing Paypal Payment..."
+                                : "Checkout with Paypal"}
                         </Button>
                     </div>
                 </div>

@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 
 Address.propTypes = {
     setCurrentSelectedAddress: PropTypes.func,
+    selectedId: PropTypes.object,
 };
 
 const initialAddressFormData = {
@@ -25,7 +26,7 @@ const initialAddressFormData = {
     notes: "",
 };
 
-export default function Address({ setCurrentSelectedAddress }) {
+export default function Address({ setCurrentSelectedAddress, selectedId }) {
     const [formData, setFormData] = useState(initialAddressFormData);
     const [currentUpdatedId, setCurrentUpdatedId] = useState(null);
     const dispatch = useDispatch();
@@ -124,6 +125,7 @@ export default function Address({ setCurrentSelectedAddress }) {
                               setCurrentSelectedAddress={
                                   setCurrentSelectedAddress
                               }
+                              selectedId={selectedId}
                           ></AddressCard>
                       ))
                     : null}

@@ -49,7 +49,9 @@ const brandsWithIcon = [
 export default function ShoppingHome() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const dispatch = useDispatch();
-    const { productList, productDetails } = useSelector((state) => state.shopProducts);
+    const { productList, productDetails } = useSelector(
+        (state) => state.shopProducts
+    );
     const { user } = useSelector((state) => state.auth);
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
     const slides = [bannerOne, bannerTwo, bannerThree];
@@ -97,8 +99,8 @@ export default function ShoppingHome() {
     }
 
     useEffect(() => {
-        if(productDetails !== null) setOpenDetailsDialog(true)
-    }, [productDetails])
+        if (productDetails !== null) setOpenDetailsDialog(true);
+    }, [productDetails]);
 
     function handleAddToCart(getCurrentProductId) {
         dispatch(
@@ -127,6 +129,7 @@ export default function ShoppingHome() {
                         className={`${
                             index === currentSlide ? "opacity-100" : "opacity-0"
                         } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
+                        loading="lazy"
                     />
                 ))}
                 <Button
@@ -225,7 +228,11 @@ export default function ShoppingHome() {
                     </div>
                 </div>
             </section>
-            <ProductDetailsDialog open={openDetailsDialog} setOpen={setOpenDetailsDialog} productDetails={productDetails}></ProductDetailsDialog>
+            <ProductDetailsDialog
+                open={openDetailsDialog}
+                setOpen={setOpenDetailsDialog}
+                productDetails={productDetails}
+            ></ProductDetailsDialog>
         </div>
     );
 }

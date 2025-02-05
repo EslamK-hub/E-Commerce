@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 
 AddressCard.propTypes = {
     addressInfo: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
         address: PropTypes.string.isRequired,
         city: PropTypes.string.isRequired,
         pinCode: PropTypes.string.isRequired,
@@ -14,6 +15,7 @@ AddressCard.propTypes = {
     handleDeleteAddress: PropTypes.func,
     handleUpdateAddress: PropTypes.func,
     setCurrentSelectedAddress: PropTypes.func,
+    selectedId: PropTypes.object,
 };
 
 export default function AddressCard({
@@ -21,6 +23,7 @@ export default function AddressCard({
     handleDeleteAddress,
     handleUpdateAddress,
     setCurrentSelectedAddress,
+    selectedId,
 }) {
     return (
         <Card
@@ -29,8 +32,9 @@ export default function AddressCard({
                     ? () => setCurrentSelectedAddress(addressInfo)
                     : null
             }
+            className={`cursor-pointer border-red-700 ${selectedId?._id === addressInfo?._id ? "border-red-900 border-[4px]" : "border-black"}`}
         >
-            <CardContent className="grid p-4 gap-4">
+            <CardContent className={`${selectedId === addressInfo?._id ? "border-black" : ""} grid p-4 gap-4`}>
                 <Label>Address : {addressInfo?.address}</Label>
                 <Label>City : {addressInfo?.city}</Label>
                 <Label>PinCode : {addressInfo?.pinCode}</Label>

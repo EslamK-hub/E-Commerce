@@ -15,6 +15,7 @@ ProductImageUpload.propTypes = {
     imageLoadingState: PropTypes.bool,
     setImageLoadingState: PropTypes.func.isRequired,
     setFormData: PropTypes.func.isRequired,
+    isCustomStyling: PropTypes.bool,
 };
 
 export default function ProductImageUpload({
@@ -25,6 +26,7 @@ export default function ProductImageUpload({
     imageLoadingState,
     setImageLoadingState,
     setFormData,
+    isCustomStyling = false,
 }) {
     const inputRef = useRef(null);
 
@@ -82,7 +84,7 @@ export default function ProductImageUpload({
     }, [imageFile]);
 
     return (
-        <div className="w-full max-w-md mx-auto mt-4">
+        <div className={`w-full mt-4 ${isCustomStyling ? "" : "max-w-md mx-auto"}`}>
             <Label className="text-lg font-semibold mb-2 block">
                 Upload Image
             </Label>

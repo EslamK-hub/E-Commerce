@@ -29,6 +29,7 @@ import ProductDetailsDialog from "@/components/shopping/product-details";
 import { useNavigate } from "react-router-dom";
 import { addCart, getCartItems } from "@/store/features/shop/cartSlice";
 import { useToast } from "@/hooks/use-toast";
+import { getFeatureImages } from "@/store/features/common/featureSlice";
 
 const categoriesWidthIcon = [
     { id: "men", label: "Men", icon: ShirtIcon },
@@ -52,6 +53,7 @@ export default function ShoppingHome() {
     const { productList, productDetails } = useSelector(
         (state) => state.shopProducts
     );
+    const { featureImageList } = useSelector((state) => state.commonFeature);
     const { user } = useSelector((state) => state.auth);
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
     const slides = [bannerOne, bannerTwo, bannerThree];
@@ -60,11 +62,13 @@ export default function ShoppingHome() {
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+            setCurrentSlide(
+                (prevSlide) => (prevSlide + 1) % featureImageList.length
+            );
         }, 5000);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [featureImageList]);
 
     const goToPreviousSlide = () => {
         setCurrentSlide((prevSlide) =>
@@ -118,20 +122,28 @@ export default function ShoppingHome() {
             }
         });
     }
+
+    useEffect(() => {
+        dispatch(getFeatureImages());
+    }, [dispatch]);
     return (
         <div className="flex flex-col min-h-screen">
             <div className="relative w-full h-[600px] overflow-hidden">
-                {slides.map((slide, index) => (
-                    <img
-                        src={slide}
-                        alt={index}
-                        key={index}
-                        className={`${
-                            index === currentSlide ? "opacity-100" : "opacity-0"
-                        } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
-                        loading="lazy"
-                    />
-                ))}
+                {featureImageList && featureImageList.length > 0
+                    ? featureImageList.map((slide, index) => (
+                          <img
+                              src={slide.image}
+                              alt={index}
+                              key={index}
+                              className={`${
+                                  index === currentSlide
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                              } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
+                              loading="lazy"
+                          />
+                      ))
+                    : null}
                 <Button
                     variant="outline"
                     size="icon"

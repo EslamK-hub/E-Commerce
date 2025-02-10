@@ -29,8 +29,11 @@ export default function ShoppingHeader() {
         <header className="sticky top-0 z-40 w-full border-b bg-background">
             <div className="flex h-16 items-center justify-between px-4 md:px-6">
                 <Link to="/shop/home" className="flex items-center gap-2">
-                    <House className="h-6 w-6" />
-                    <span className="font-bold">Sahilli</span>
+                    <img
+                        src="../../../public/logo.svg"
+                        alt="Logo"
+                        className="w-[70px]"
+                    />
                 </Link>
                 <Sheet>
                     <SheetTrigger asChild>
@@ -51,10 +54,13 @@ export default function ShoppingHeader() {
                         <SheetTitle>
                             <Link
                                 to="/shop/home"
-                                className="flex items-center gap-2"
+                                className="flex items-center "
                             >
-                                <House className="h-6 w-6" />
-                                <span className="font-bold">Sahilli</span>
+                                <img
+                                    src="../../../public/logo.svg"
+                                    alt="Logo"
+                                    className="w-[70px]"
+                                />
                             </Link>
                         </SheetTitle>
                         <MenuItems></MenuItems>
@@ -134,7 +140,9 @@ function HeaderRightContent() {
                     className="relative"
                 >
                     <ShoppingCart className="h-6 w-6" />
-                    <span className="absolute top-[-3px] right-[2px] font-extrabold text-sm">{ cartItems?.items?.length || 0 }</span>
+                    <span className="absolute top-[-3px] right-[2px] font-extrabold text-sm">
+                        {cartItems?.items?.length || 0}
+                    </span>
                     <span className="sr-only">User cart</span>
                 </Button>
                 <UserCartWrapper

@@ -10,7 +10,7 @@ export const addFeatureImage = createAsyncThunk(
     "/feature/add-feature-image",
     async (image) => {
         const response = await axios.post(
-            `http://localhost:5000/api/common/feature/add`,
+            `${import.meta.env.VITE_SERVER_URL}/api/common/feature/add`,
             { image }
         );
 
@@ -22,7 +22,7 @@ export const getFeatureImages = createAsyncThunk(
     "/feature/get-feature-images",
     async () => {
         const response = await axios.get(
-            `http://localhost:5000/api/common/feature/get`
+            `${import.meta.env.VITE_SERVER_URL}/api/common/feature/get`
         );
 
         return response.data;

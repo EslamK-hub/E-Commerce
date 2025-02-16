@@ -1,4 +1,4 @@
-import { House, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
+import { LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
 import {
     Link,
     useLocation,
@@ -25,15 +25,21 @@ import { getCartItems } from "@/store/features/shop/cartSlice";
 import { Label } from "../ui/label";
 
 export default function ShoppingHeader() {
+    const [scroll, setScroll] = useState(0);
+
+    window.addEventListener("scroll", () => {
+        setScroll(window.scrollY);
+    });
+
     return (
-        <header className="sticky top-0 z-40 w-full border-b bg-background">
+        <header
+            className={`${
+                scroll > 0 ? "bg-white shadow-md" : null
+            } fixed top-0 z-40 w-full transition-all duration-300`}
+        >
             <div className="flex h-16 items-center justify-between px-4 md:px-6">
                 <Link to="/shop/home" className="flex items-center gap-2">
-                    <img
-                        src="../../../public/logo.svg"
-                        alt="Logo"
-                        className="w-[70px]"
-                    />
+                    <img src="/logo.svg" alt="Logo" className="w-[80px]" />
                 </Link>
                 <Sheet>
                     <SheetTrigger asChild>
@@ -57,9 +63,9 @@ export default function ShoppingHeader() {
                                 className="flex items-center "
                             >
                                 <img
-                                    src="../../../public/logo.svg"
+                                    src="/logo.svg"
                                     alt="Logo"
-                                    className="w-[70px]"
+                                    className="w-[80px]"
                                 />
                             </Link>
                         </SheetTitle>
@@ -81,7 +87,7 @@ export default function ShoppingHeader() {
 function MenuItems() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [searchParams, setSearchParams] = useSearchParams();
+    const setSearchParams = useSearchParams()[1];
     function handleNavigate(getCurrentMenuItem) {
         sessionStorage.removeItem("filters");
         const currentFilter =
@@ -103,7 +109,7 @@ function MenuItems() {
             {shoppingViewHeaderMenuItems.map((menuItem) => (
                 <Label
                     onClick={() => handleNavigate(menuItem)}
-                    className="text-sm font-medium cursor-pointer"
+                    className="text-sm font-medium cursor-pointer hover:text-primary transition-colors"
                     key={menuItem.id}
                 >
                     {menuItem.label}
@@ -126,25 +132,23 @@ function HeaderRightContent() {
 
     useEffect(() => {
         dispatch(getCartItems(user?.id));
-    }, [dispatch]);
+    }, [dispatch, user?.id]);
     return (
         <div className="flex lg:items-center lg:flex-row flex-col gap-4">
             <Sheet
                 open={openCartSheet}
                 onOpenChange={() => setOpenCartSheet(false)}
             >
-                <Button
-                    onClick={() => setOpenCartSheet(true)}
-                    variant="outline"
-                    size="icon"
-                    className="relative"
-                >
-                    <ShoppingCart className="h-6 w-6" />
-                    <span className="absolute top-[-3px] right-[2px] font-extrabold text-sm">
+                <div className="relative cursor-pointer">
+                    <ShoppingCart
+                        className="h-6 w-6 text-black"
+                        onClick={() => setOpenCartSheet(true)}
+                    />
+                    <span className="absolute top-[-9px] right-[-7px] text-[12px] font-semibold bg-primary w-5 h-5 text-center rounded-full text-white flex items-center justify-center">
                         {cartItems?.items?.length || 0}
                     </span>
                     <span className="sr-only">User cart</span>
-                </Button>
+                </div>
                 <UserCartWrapper
                     setOpenCartSheet={setOpenCartSheet}
                     cartItems={

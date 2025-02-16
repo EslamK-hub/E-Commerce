@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
-import bannerOne from "../../assets/banner-1.webp";
-import bannerTwo from "../../assets/banner-2.webp";
-import bannerThree from "../../assets/banner-3.webp";
+// import { Button } from "@/components/ui/button";
+// import bannerOne from "../../assets/banner-1.webp";
+// import bannerTwo from "../../assets/banner-2.webp";
+// import bannerThree from "../../assets/banner-3.webp";
 import {
     Airplay,
     BabyIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
+    // ChevronLeftIcon,
+    // ChevronRightIcon,
     CloudLightning,
     Heater,
     Images,
@@ -48,37 +48,37 @@ const brandsWithIcon = [
 ];
 
 export default function ShoppingHome() {
-    const [currentSlide, setCurrentSlide] = useState(0);
+    // const [currentSlide, setCurrentSlide] = useState(0);
     const dispatch = useDispatch();
     const { productList, productDetails } = useSelector(
         (state) => state.shopProducts
     );
-    const { featureImageList } = useSelector((state) => state.commonFeature);
+    // const { featureImageList } = useSelector((state) => state.commonFeature);
     const { user } = useSelector((state) => state.auth);
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-    const slides = [bannerOne, bannerTwo, bannerThree];
+    // const slides = [bannerOne, bannerTwo, bannerThree];
     const navigate = useNavigate();
     const { toast } = useToast();
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentSlide(
-                (prevSlide) => (prevSlide + 1) % featureImageList.length
-            );
-        }, 5000);
+    // useEffect(() => {
+    //     const timer = setInterval(() => {
+    //         setCurrentSlide(
+    //             (prevSlide) => (prevSlide + 1) % featureImageList.length
+    //         );
+    //     }, 5000);
 
-        return () => clearInterval(timer);
-    }, [featureImageList]);
+    //     return () => clearInterval(timer);
+    // }, [featureImageList]);
 
-    const goToPreviousSlide = () => {
-        setCurrentSlide((prevSlide) =>
-            prevSlide === 0 ? slides.length - 1 : prevSlide - 1
-        );
-    };
+    // const goToPreviousSlide = () => {
+    //     setCurrentSlide((prevSlide) =>
+    //         prevSlide === 0 ? slides.length - 1 : prevSlide - 1
+    //     );
+    // };
 
-    const goToNextSlide = () => {
-        setCurrentSlide((nextSlide) => (nextSlide + 1) % slides.length);
-    };
+    // const goToNextSlide = () => {
+    //     setCurrentSlide((nextSlide) => (nextSlide + 1) % slides.length);
+    // };
 
     useEffect(() => {
         dispatch(
@@ -128,8 +128,15 @@ export default function ShoppingHome() {
     }, [dispatch]);
     return (
         <div className="flex flex-col min-h-screen">
-            <div className="relative w-full h-[600px] overflow-hidden">
-                {featureImageList && featureImageList.length > 0
+            <div className="w-full h-full overflow-hidden">
+                <video
+                    className="w-full h-full"
+                    src="/Intro.mp4"
+                    autoPlay
+                    loop
+                    muted
+                ></video>
+                {/* {featureImageList && featureImageList.length > 0
                     ? featureImageList.map((slide, index) => (
                           <img
                               src={slide.image}
@@ -159,7 +166,7 @@ export default function ShoppingHome() {
                     className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"
                 >
                     <ChevronRightIcon className="w-4 h-4"></ChevronRightIcon>
-                </Button>
+                </Button> */}
             </div>
             <section className="py-12 bg-gray-50">
                 <div className="container mx-auto px-4">
